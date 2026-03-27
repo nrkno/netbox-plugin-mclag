@@ -5,6 +5,7 @@ from django.core.exceptions import MultipleObjectsReturned, ObjectDoesNotExist
 
 class McLagInterfaceExtensions(PluginTemplateExtension):
     model = "dcim.interface"
+    models = ("dcim.device",)
 
     def buttons(self):
         interface = self.context["object"]
@@ -34,6 +35,7 @@ class McLagInterfaceExtensions(PluginTemplateExtension):
 
 class McLagDeviceExtensions(PluginTemplateExtension):
     model = "dcim.device"
+    models = ("dcim.interface",)
 
     def buttons(self):
         device = self.context["object"]
