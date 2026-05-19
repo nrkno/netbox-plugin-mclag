@@ -52,6 +52,7 @@ The following functionality is currently offered by this plugin:
   * The ability to view/create/update/delete *Multi-Chassis Link Aggregation Group* objects through the web UI and by API.
   * Button added to Device view to "Show MC Domain" if a device is associated with an MC Domain
   * Button added to Interface view to "Show MC-LAG" if an interface is associated with an MC-LAG
+  * Extra Column added in the Interface Table to see the related MC-LAG Domain and its Group
 
 ## Configuration template example
 
@@ -85,33 +86,17 @@ exit
 
 ## Supported versions
 
-The current version of the  `netbox-plugin-mclag` plugin has been developed for Netbox 4.3.
+Version 0.3 and newer of the `netbox-plugin-mclag` plugin have added compatibility for NetBox 4.3 and should have backwards compatibility with NetBox 4.2. It is not supported on older versions.
 
 The plugin has been developed for Python 3.12.3, but I expect it to work with any Python version supported by Netbox.
 
-## Installation
+## Installation 
 
-Navigate to the directory you wish to download the plugin into. For this example, we will use ```/opt/netbox-plugin```. If the directory is not already created, you can create it using ```mkdir /opt/netbox-plugin```.
+The git repository is published to PyPi as ```netbox-plugin-mclag```
+- Add ```netbox-plugin-mclag``` to the ```/opt/netbox/local_requirements.txt``` (to make sure it is installed when upgrading)
+- Install the plugin library using the venv python ```/opt/netbox/venv/bin/python -m pip install netbox-plugin-mclag```
 
-Once the directory is created, use ```cd /opt/netbox-plugin``` to enter it.
-
-You will then need to clone the repository using git clone.
-
-```git clone https://github.com/pv2b/netbox-plugin-mclag.git```
-
-This will download the repo containing the plugin to your current working directory. Use ```cd netbox-plugin-mclag``` to enter that directory.
-
-Before installing the plugin, you will then need to activate your venv for Netbox (make sure to use the correct path for your Netbox installation):
-
-```source /opt/netbox/venv/bin/activate```
-
-You can then run the setup to install your plugin using the following command :
-
-```python3 setup.py install```
-
-This will install the plugin for you inside of Netbox's virtual environment (venv).
-
-You then need to edit your Netbox configuration file (```/opt/netbox/netbox/netbox/configuration.py```) to add the plugin to your Netbox configuration adding ```netbox_plugin_mclag``` to the ```PLUGINS``` list as per this example below:
+Edit your Netbox configuration file (```/opt/netbox/netbox/netbox/configuration.py```) to add the plugin to your Netbox configuration, by adding ```netbox_plugin_mclag``` to the ```PLUGINS``` list as per this example below:
 
 ```python
 PLUGINS = [
@@ -138,6 +123,20 @@ PLUGINS_CONFIG = {
     }
 }
 ```
+
+The default list of 'LAG' interface types is limited. This can be extended using the FIELD_CHOICES in the configuration.py:
+See https://netbox.readthedocs.io/en/feature/configuration/data-validation/#field_choices
+
+```python
+FIELD_CHOICES = {
+    'netbox_plugin_mclag.McLag.type+': (
+        ('value', 'Display value', 'color'),
+    )
+}
+```
+Remark: 
+ - Make sure to add the + after 'netbox_plugin_mclag.McLag.type'. This will add your options to the existing ones.
+ - Make sure to have a comma after the last entry !
 
 ## Uninstallation
 
@@ -187,3 +186,7 @@ The following materials were instrumental in developing this plugin:
  * The [Plugins Development](https://docs.netbox.dev/en/stable/plugins/development/) chapter of the NetBox documentation.
  * The Wikipedia page for [Multi-Chassis Link Aggregation Groups](https://en.wikipedia.org/wiki/Multi-chassis_link_aggregation_group)
  * The [Virtual Port Channels](https://www.ciscopress.com/articles/article.asp?p=3150966&seqNum=2) section of the [Port Channels and vPCs chapter](https://www.ciscopress.com/articles/article.asp?p=3150966) from the [Cisco Data Center Fundamentals](https://www.ciscopress.com/store/cisco-data-center-fundamentals-9780137638246) by [Somit Maloo](https://www.ciscopress.com/authors/bio/75b726d0-f107-4c19-98bd-77d9f3558184) and [Iskren Nikolov](https://www.ciscopress.com/authors/bio/301612bc-152f-4827-b31e-ab7a1dd35c61), published by [Cisco Press](https://www.ciscopress.com/).
+
+
+----
+Based on the original code of pv2b https://github.com/pv2b/netbox-plugin-mclag

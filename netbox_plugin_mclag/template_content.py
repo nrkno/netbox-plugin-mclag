@@ -1,11 +1,13 @@
-from netbox.plugins import PluginTemplateExtension
-from .models import McDomain, McLag
 from django.core.exceptions import MultipleObjectsReturned, ObjectDoesNotExist
+
+from netbox.plugins import PluginTemplateExtension
+
+from netbox_plugin_mclag.models import McDomain, McLag
 
 
 class McLagInterfaceExtensions(PluginTemplateExtension):
-    model = "dcim.interface"
-    models = ("dcim.interface",)
+    model = "dcim.interface" # NB = 4.2
+    models = ("dcim.interface",) # NB >= 4.3
 
     def buttons(self):
         interface = self.context["object"]
@@ -34,8 +36,8 @@ class McLagInterfaceExtensions(PluginTemplateExtension):
 
 
 class McLagDeviceExtensions(PluginTemplateExtension):
-    model = "dcim.device"
-    models = ("dcim.device",)
+    model = "dcim.device" # NB = 4.2
+    models = ("dcim.device",) # NB >= 4.3
 
     def buttons(self):
         device = self.context["object"]
