@@ -8,11 +8,12 @@ from netbox.views.generic import (
     ObjectChildrenView,
     BulkEditView,
     BulkDeleteView,
+    BulkImportView,
 )
 from utilities.views import register_model_view
 
 from netbox_plugin_mclag.models import McDomain, McLag
-from netbox_plugin_mclag.forms import McDomainForm, McDomainBulkEditForm, McLagForm, McLagBulkEditForm
+from netbox_plugin_mclag.forms import McDomainForm, McDomainBulkEditForm, McDomainImportForm, McLagForm, McLagBulkEditForm
 from netbox_plugin_mclag.tables import McDomainTable, McLagTable
 from netbox_plugin_mclag.filtersets import McDomainFilterSet, McLagFilterSet
 
@@ -36,6 +37,11 @@ class McDomainListView(ObjectListView):
 class McDomainEditView(ObjectEditView):
     queryset = McDomain.objects.all()
     form = McDomainForm
+
+@register_model_view(McDomain, name='bulk_import', detail=False)
+class McDomainBulkImportView(BulkImportView):
+    queryset = McDomain.objects.all()
+    model_form = McDomainImportForm
 
 @register_model_view(McDomain, name='bulk_edit')
 class McDomainBulkEditView(BulkEditView):
