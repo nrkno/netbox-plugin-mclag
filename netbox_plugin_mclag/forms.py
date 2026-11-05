@@ -1,8 +1,13 @@
 from django import forms
 
 from dcim.models import Interface, Device
-from netbox.forms import NetBoxModelForm, NetBoxModelBulkEditForm
-from utilities.forms.fields import DynamicModelMultipleChoiceField, DynamicModelChoiceField, CommentField
+from netbox.forms import NetBoxModelForm, NetBoxModelBulkEditForm, NetBoxModelImportForm
+from utilities.forms.fields import (
+    CommentField,
+    CSVModelMultipleChoiceField,
+    DynamicModelChoiceField,
+    DynamicModelMultipleChoiceField,
+)
 from utilities.forms.rendering import FieldSet
 from utilities.forms.widgets import APISelectMultiple
 
@@ -10,6 +15,17 @@ from netbox_plugin_mclag.models import McDomain, McLag
 from netbox_plugin_mclag.util import get_interface_label
 
 class McDomainForm(NetBoxModelForm):
+    class Meta:
+        model = McDomain
+        fields = ('name', 'domain_id', 'description', 'devices', 'tags')
+
+class McDomainImportForm(NetBoxModelImportForm):
+    devices = CSVModelMultipleChoiceField(
+        queryset=Device.objects.all(),
+        to_field_name='name',
+        help_text='Device names separated by commas, encased with double quotes (e.g. "switch1,switch2")',
+    )
+
     class Meta:
         model = McDomain
         fields = ('name', 'domain_id', 'description', 'devices', 'tags')

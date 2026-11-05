@@ -7,6 +7,7 @@ from netbox_plugin_mclag.views import (
     McDomainListView,
     McDomainEditView,
     McDomainBulkEditView,
+    McDomainBulkImportView,
     McDomainDeleteView,
     McDomainBulkDeleteView,
     McLagView,
@@ -22,6 +23,7 @@ urlpatterns = (
     # McDomain
     path('domains/', McDomainListView.as_view(), name='mcdomain_list'),
     path('domains/add/', McDomainEditView.as_view(), name='mcdomain_add'),
+    path('domains/import/', McDomainBulkImportView.as_view(), name='mcdomain_bulk_import'),
     path('domains/edit/', McDomainBulkEditView.as_view(), name='mcdomain_bulk_edit'),
     path('domains/delete/', McDomainBulkDeleteView.as_view(), name='mcdomain_bulk_delete'),
     path('domains/<int:pk>/', McDomainView.as_view(), name='mcdomain'),
